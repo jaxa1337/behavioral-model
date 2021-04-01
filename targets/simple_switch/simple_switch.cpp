@@ -264,7 +264,7 @@ SimpleSwitch::receive_(port_t port_num, const char *buffer, int len) {
 
   if (phv->has_field("intrinsic_metadata.ingress_global_timestamp")) {
     phv->get_field("intrinsic_metadata.ingress_global_timestamp")
-        .set(get_ts().count());
+        .set(get_time_since_epoch_us());
   }
 
   input_buffer->push_front(
@@ -646,7 +646,7 @@ SimpleSwitch::egress_thread(size_t worker_id) {
 
     if (phv->has_field("intrinsic_metadata.egress_global_timestamp")) {
       phv->get_field("intrinsic_metadata.egress_global_timestamp")
-          .set(get_ts().count());
+          .set(get_time_since_epoch_us());
     }
 
     if (with_queueing_metadata) {
