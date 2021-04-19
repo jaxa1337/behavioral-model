@@ -31,7 +31,8 @@ from thrift.protocol import TMultiplexedProtocol
 
 
 def check_JSON_md5(client, json_src, out=sys.stdout):
-    with open(json_src, 'r') as f:
+    #with open(json_src, 'r') as f:
+    with open(json_src, 'r', encoding='utf-8') as f:
         m = hashlib.md5()
         for L in f:
             m.update(L)
