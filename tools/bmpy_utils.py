@@ -35,7 +35,7 @@ def check_JSON_md5(client, json_src, out=sys.stdout):
     with open(json_src, 'r', encoding='utf-8') as f:
         m = hashlib.md5()
         for L in f:
-            m.update(L)
+            m.update(L.encode('utf-8'))
         md5sum = m.digest()
 
     def my_print(s):
