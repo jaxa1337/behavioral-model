@@ -260,7 +260,7 @@ class Msg(object):
         return 0
 
     def generate(self):
-        return []
+        return b""
 
     def __str__(self):
         return ""
@@ -287,8 +287,10 @@ def make_extract_function(P, fmt):
                     v_str = 'Empty'
                     v_int = 0
                 else:
-                    v_str = ':'.join(x.encode('hex') for x in v)
-                    v_int = int(v.encode('hex'), 16)
+                    # v_str = ':'.join(x.encode('hex') for x in v)
+                    # v_int = int(v.encode('hex'), 16)
+                    v_str = ':'.join(['{:02x}'.format(x) for x in v])
+                    v_int = int(v.hex(), 16)
                 setattr(self, name + "_str", v_str)
                 setattr(self, name + "_int", v_int)
         return offset
@@ -324,7 +326,8 @@ def make_generate_function(P, fmt):
                 f = uf
             # encoding problem if using string
             # nnpy expects unicode, which does not roll
-            s += list(struct.pack(f, v))
+            # s += list(struct.pack(f, v))
+            s += struct.pack(f,v)
         return s
 
     return generate
@@ -390,10 +393,10 @@ def _test():
     m = Msg_FieldValue()
     # < required to prevent 8-byte alignment
     req = struct.pack("<iQQQQQi", MsgType.FIELD_VALUE, 0, 99, 1, 2, 55, 3)
-    req += struct.pack(">3s", "\x01\x02\x03")
+    req += struct.pack(">3s", b"\x01\x02\x03")
     m.extract(req)
     s = m.generate()
-    assert(s == list(req))
+    assert(s == req)
 
 _test()
 
@@ -1206,6 +1209,7 @@ def main():
         print(e)
         if c.attached:
             c.say_bye()
-
+        raise
+    
 if __name__ == "__main__":
     main()
